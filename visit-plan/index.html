@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成教2组 CBD 7月拜访计划</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    padding: 20px;
+  }
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid #e8e8e8;
+    background: #fff;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    color: #999;
+    margin-top: 4px;
+  }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .btn-primary {
+    background: #1967D2;
+    color: #fff;
+  }
+  .btn-primary:hover { background: #1558b0; }
+  .btn-outline {
+    background: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+  }
+  .btn-outline:hover { border-color: #1967D2; color: #1967D2; }
+
+  /* Guidelines */
+  .guidelines {
+    padding: 16px 28px;
+    background: #e8f0fe;
+    border-bottom: 1px solid #d2e3fc;
+    font-size: 13px;
+    color: #1a56a0;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .guidelines strong { color: #1967D2; }
+  .guidelines .item { display: flex; align-items: center; gap: 6px; }
+
+  /* Calendar Grid */
+  .calendar-header {
+    display: grid;
+    grid-template-columns: 80px repeat(6, 1fr);
+    background: #fafafa;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .calendar-header .col-header {
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    border-right: 1px solid #e8e8e8;
+  }
+  .calendar-header .col-header:first-child {
+    text-align: left;
+    padding-left: 16px;
+    font-size: 12px;
+    color: #999;
+  }
+  .calendar-header .col-header:last-child { border-right: none; }
+
+  .calendar-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Week Row */
+  .week-row {
+    display: grid;
+    grid-template-columns: 80px repeat(6, 1fr);
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .week-row:last-child { border-bottom: none; }
+
+  .week-label {
+    padding: 8px 12px;
+    background: #fafafa;
+    font-size: 11px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #e8e8e8;
+    writing-mode: horizontal-tb;
+    font-weight: 500;
+  }
+
+  /* Day Cell */
+  .day-cell {
+    min-height: 200px;
+    border-right: 1px solid #e8e8e8;
+    position: relative;
+    transition: background 0.15s;
+  }
+  .day-cell:last-child { border-right: none; }
+  .day-cell:hover { background: #f8f9ff; }
+  .day-cell.empty { background: #fafafa; }
+  .day-cell.empty:hover { background: #fafafa; }
+
+  .day-date {
+    padding: 8px 10px 4px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .day-date .day-num { font-size: 16px; }
+  .day-date .lunar { font-size: 11px; color: #bbb; font-weight: 400; }
+  .day-date .holiday {
+    font-size: 11px;
+    background: #f3e8ff;
+    color: #8b5cf6;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .day-date .today {
+    width: 28px;
+    height: 28px;
+    background: #ff4d4f;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* Sales Rows */
+  .sales-list {
+    padding: 4px 0;
+  }
+  .sales-row {
+    display: flex;
+    align-items: center;
+    padding: 2px 8px;
+    gap: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-radius: 4px;
+    margin: 0 4px;
+  }
+  .sales-row:hover { background: #e8f0fe; }
+  .sales-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+    min-width: 36px;
+  }
+  .sales-content {
+    font-size: 11px;
+    color: #888;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sales-content.filled { color: #1967D2; }
+  .sales-status {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .status-done { background: #e8f5e9; color: #2e7d32; }
+  .status-pending { background: #fff8e1; color: #f57f17; }
+  .status-urgent { background: #ffebee; color: #c62828; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 420px;
+    max-width: 90vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #eee;
+  }
+  .modal-header h3 { font-size: 16px; font-weight: 600; }
+  .modal-header .modal-date { font-size: 13px; color: #999; margin-top: 4px; }
+  .modal-body { padding: 20px 24px; }
+  .modal-body label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .modal-body select,
+  .modal-body input,
+  .modal-body textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  .modal-body select:focus,
+  .modal-body input:focus,
+  .modal-body textarea:focus {
+    outline: none;
+    border-color: #1967D2;
+    box-shadow: 0 0 0 3px rgba(25,103,210,0.1);
+  }
+  .modal-body textarea { resize: vertical; min-height: 60px; }
+  .modal-body .status-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .modal-body .status-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    flex: 1;
+    justify-content: center;
+  }
+  .modal-body .status-options input { display: none; }
+  .modal-body .status-options label:hover { border-color: #1967D2; }
+  .modal-body .status-options input:checked + label,
+  .modal-body .status-options label.active {
+    border-color: #1967D2;
+    background: #e8f0fe;
+    color: #1967D2;
+  }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .modal-footer .btn { min-width: 80px; }
+
+  /* Stats Bar */
+  .stats-bar {
+    display: flex;
+    gap: 20px;
+    padding: 14px 28px;
+    background: #fafafa;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 13px;
+  }
+  .stat-item { display: flex; align-items: center; gap: 6px; }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-blue { background: #1967D2; }
+  .dot-green { background: #4caf50; }
+  .dot-orange { background: #ff9800; }
+  .dot-red { background: #f44336; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .calendar-header, .week-row {
+      grid-template-columns: 60px repeat(6, 1fr);
+    }
+    .day-cell { min-height: 150px; }
+    .sales-name { font-size: 10px; min-width: 28px; }
+    .sales-content { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>2026年7月</h1>
+      <div class="subtitle">成教2组 CBD 拜访计划</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline" onclick="exportData()">📥 导出</button>
+      <button class="btn btn-primary" onclick="clearAll()">清空数据</button>
+    </div>
+  </div>
+
+  <div class="guidelines">
+    <div class="item"><strong>📋 填写格式：</strong>客户名称 · 上门/线上 · 核心结论</div>
+    <div class="item"><strong>📌 示例：</strong>流利说 · 上门 · 确认Q3预算40万</div>
+    <div class="item"><strong>✅ 要求：</strong>每人每周至少3次，无拜访填"—"</div>
+  </div>
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div class="calendar-header">
+    <div class="col-header">销售</div>
+    <div class="col-header">周日</div>
+    <div class="col-header">周一</div>
+    <div class="col-header">周二</div>
+    <div class="col-header">周三</div>
+    <div class="col-header">周四</div>
+    <div class="col-header">周五</div>
+  </div>
+
+  <div class="calendar-body" id="calendarBody"></div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">编辑拜访记录</h3>
+      <div class="modal-date" id="modalDate"></div>
+    </div>
+    <div class="modal-body">
+      <label>销售人员</label>
+      <select id="modalSales"></select>
+
+      <label>拜访方式</label>
+      <select id="modalType">
+        <option value="">请选择</option>
+        <option value="上门">🏢 上门拜访</option>
+        <option value="线上">💻 线上沟通</option>
+        <option value="电话">📞 电话沟通</option>
+      </select>
+
+      <label>客户名称</label>
+      <input type="text" id="modalClient" placeholder="如：流利说">
+
+      <label>核心结论（一句话）</label>
+      <textarea id="modalNote" placeholder="如：确认Q3投放预算40万，已同步素材计划"></textarea>
+
+      <label>状态标记</label>
+      <div class="status-options">
+        <label class="active">
+          <input type="radio" name="status" value="" checked> 无
+        </label>
+        <label>
+          <input type="radio" name="status" value="done"> ✅ 已完成
+        </label>
+        <label>
+          <input type="radio" name="status" value="pending"> 🟡 待跟进
+        </label>
+        <label>
+          <input type="radio" name="status" value="urgent"> 🔴 紧急
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-outline" onclick="deleteRecord()" style="color:#f44336;border-color:#f44336;">删除</button>
+      <button class="btn btn-primary" onclick="saveRecord()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 配置 ============
+const SALES = ['琪莉', '沥川', '米苏', '奈美', '罗恩', '修缘', '已月'];
+
+// 2026年7月：7月1日是周三
+// 日历从6月28日(周日)开始到8月1日(周六)
+const MONTH = 6; // July (0-indexed)
+const YEAR = 2026;
+
+// 农历日期（简化版，7月）
+const LUNAR = {
+  1: '六月初七', 2: '初八', 3: '初九', 4: '初十', 5: '十一',
+  6: '十二', 7: '十三', 8: '十四', 9: '十五', 10: '十六',
+  11: '十七', 12: '十八', 13: '十九', 14: '二十', 15: '廿一',
+  16: '廿二', 17: '廿三', 18: '廿四', 19: '廿五', 20: '廿六',
+  21: '廿七', 22: '廿八', 23: '廿九', 24: '三十', 25: '七月初一',
+  26: '初二', 27: '初三', 28: '初四', 29: '初五', 30: '初六', 31: '初七'
+};
+
+// 节假日
+const HOLIDAYS = {
+  1: '建党节',
+};
+
+// ============ 数据存储 ============
+let records = {};
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem('visit_plan_july_2026');
+    if (saved) records = JSON.parse(saved);
+  } catch(e) { records = {}; }
+}
+
+function saveData() {
+  localStorage.setItem('visit_plan_july_2026', JSON.stringify(records));
+}
+
+function getRecord(day, sales) {
+  return records[`${day}-${sales}`] || null;
+}
+
+function setRecord(day, sales, data) {
+  records[`${day}-${sales}`] = data;
+  saveData();
+}
+
+function deleteRecordData(day, sales) {
+  delete records[`${day}-${sales}`];
+  saveData();
+}
+
+// ============ 日历生成 ============
+function generateCalendar() {
+  const body = document.getElementById('calendarBody');
+  body.innerHTML = '';
+
+  // July 2026: 1st is Wednesday (day 3 of week, 0=Sun)
+  // Start from June 28 (Sunday) to show full first week
+  const startDate = new Date(2026, 5, 28); // June 28, 2026
+  const endDate = new Date(2026, 7, 1);   // Aug 1, 2026
+
+  let current = new Date(startDate);
+  let weekNum = 1;
+
+  while (current <= endDate) {
+    const row = document.createElement('div');
+    row.className = 'week-row';
+
+    // Week label
+    const label = document.createElement('div');
+    label.className = 'week-label';
+    label.textContent = `第${weekNum}周`;
+    row.appendChild(label);
+
+    // 6 days: Sun ~ Fri
+    for (let i = 0; i < 6; i++) {
+      const cell = document.createElement('div');
+      const date = new Date(current);
+      const day = date.getDate();
+      const month = date.getMonth();
+
+      if (month !== MONTH) {
+        cell.className = 'day-cell empty';
+        cell.innerHTML = `<div class="day-date"><span class="day-num" style="color:#ccc">${day}日</span></div>`;
+      } else {
+        cell.className = 'day-cell';
+        const isToday = isTodayDate(date);
+        const holiday = HOLIDAYS[day] || '';
+        const lunar = LUNAR[day] || '';
+
+        let dateHtml = '<div class="day-date">';
+        if (isToday) {
+          dateHtml += `<span class="today">${day}</span>`;
+        } else {
+          dateHtml += `<span class="day-num">${day}</span>`;
+        }
+        if (lunar) dateHtml += `<span class="lunar">${lunar}</span>`;
+        if (holiday) dateHtml += `<span class="holiday">★ ${holiday}</span>`;
+        dateHtml += '</div>';
+
+        // Sales rows
+        let salesHtml = '<div class="sales-list">';
+        SALES.forEach(sales => {
+          const record = getRecord(day, sales);
+          const hasRecord = record && record.client;
+          const content = hasRecord ? `${record.client} · ${record.type || ''}` : '点击填写';
+          const filledClass = hasRecord ? 'filled' : '';
+
+          let statusHtml = '';
+          if (record && record.status) {
+            const statusMap = {
+              'done': '<span class="sales-status status-done">✅</span>',
+              'pending': '<span class="sales-status status-pending">🟡</span>',
+              'urgent': '<span class="sales-status status-urgent">🔴</span>'
+            };
+            statusHtml = statusMap[record.status] || '';
+          }
+
+          salesHtml += `
+            <div class="sales-row" onclick="openModal(${day}, '${sales}')">
+              <span class="sales-name">${sales}</span>
+              <span class="sales-content ${filledClass}">${content}</span>
+              ${statusHtml}
+            </div>`;
+        });
+        salesHtml += '</div>';
+
+        cell.innerHTML = dateHtml + salesHtml;
+      }
+
+      row.appendChild(cell);
+      current.setDate(current.getDate() + 1);
+    }
+
+    body.appendChild(row);
+    weekNum++;
+  }
+
+  updateStats();
+}
+
+function isTodayDate(date) {
+  const today = new Date();
+  return date.getFullYear() === today.getFullYear() &&
+         date.getMonth() === today.getMonth() &&
+         date.getDate() === today.getDate();
+}
+
+// ============ 统计 ============
+function updateStats() {
+  const bar = document.getElementById('statsBar');
+  let total = 0, done = 0, pending = 0, urgent = 0;
+
+  Object.values(records).forEach(r => {
+    if (r && r.client) {
+      total++;
+      if (r.status === 'done') done++;
+      else if (r.status === 'pending') pending++;
+      else if (r.status === 'urgent') urgent++;
+    }
+  });
+
+  bar.innerHTML = `
+    <div class="stat-item"><span class="stat-dot dot-blue"></span>总记录 <strong>${total}</strong></div>
+    <div class="stat-item"><span class="stat-dot dot-green"></span>已完成 <strong>${done}</strong></div>
+    <div class="stat-item"><span class="stat-dot dot-orange"></span>待跟进 <strong>${pending}</strong></div>
+    <div class="stat-item"><span class="stat-dot dot-red"></span>紧急 <strong>${urgent}</strong></div>
+  `;
+}
+
+// ============ 弹窗 ============
+let currentDay = null;
+let currentSales = null;
+
+function openModal(day, sales) {
+  currentDay = day;
+  currentSales = sales;
+
+  document.getElementById('modalTitle').textContent = `${sales} - 7月${day}日`;
+  document.getElementById('modalDate').textContent = `2026年7月${day}日`;
+
+  // Fill sales dropdown
+  const select = document.getElementById('modalSales');
+  select.innerHTML = SALES.map(s => `<option value="${s}" ${s === sales ? 'selected' : ''}>${s}</option>`).join('');
+
+  // Fill existing data
+  const record = getRecord(day, sales);
+  document.getElementById('modalType').value = record?.type || '';
+  document.getElementById('modalClient').value = record?.client || '';
+  document.getElementById('modalNote').value = record?.note || '';
+
+  // Reset status
+  const status = record?.status || '';
+  document.querySelectorAll('.status-options label').forEach(label => {
+    label.classList.remove('active');
+  });
+  document.querySelectorAll('.status-options input').forEach(input => {
+    input.checked = input.value === status;
+    if (input.value === status) {
+      input.closest('label').classList.add('active');
+    }
+  });
+
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function saveRecord() {
+  const sales = document.getElementById('modalSales').value;
+  const type = document.getElementById('modalType').value;
+  const client = document.getElementById('modalClient').value.trim();
+  const note = document.getElementById('modalNote').value.trim();
+  const status = document.querySelector('.status-options input:checked')?.value || '';
+
+  if (!client && !type) {
+    // If empty, delete the record
+    deleteRecordData(currentDay, currentSales);
+  } else {
+    setRecord(currentDay, sales, { type, client, note, status });
+  }
+
+  closeModal();
+  generateCalendar();
+}
+
+function deleteRecord() {
+  if (currentDay && currentSales) {
+    deleteRecordData(currentDay, currentSales);
+  }
+  closeModal();
+  generateCalendar();
+}
+
+function clearAll() {
+  if (confirm('确定要清空所有拜访记录吗？此操作不可恢复。')) {
+    records = {};
+    saveData();
+    generateCalendar();
+  }
+}
+
+function exportData() {
+  // Build a text summary
+  let text = '成教2组 CBD 7月拜访计划\n';
+  text += '========================\n\n';
+
+  for (let day = 1; day <= 31; day++) {
+    let dayRecords = [];
+    SALES.forEach(sales => {
+      const r = getRecord(day, sales);
+      if (r && r.client) {
+        const statusText = r.status === 'done' ? '✅' : r.status === 'pending' ? '🟡' : r.status === 'urgent' ? '🔴' : '';
+        dayRecords.push(`  ${sales}: ${r.client} · ${r.type || '未填'} · ${r.note || ''} ${statusText}`);
+      }
+    });
+    if (dayRecords.length > 0) {
+      text += `7月${day}日\n${dayRecords.join('\n')}\n\n`;
+    }
+  }
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `拜访计划_2026年7月.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Status option click handler
+document.querySelectorAll('.status-options label').forEach(label => {
+  label.addEventListener('click', function() {
+    document.querySelectorAll('.status-options label').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+    this.querySelector('input').checked = true;
+  });
+});
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ESC to close
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ============ 初始化 ============
+loadData();
+generateCalendar();
+</script>
+
+</body>
+</html>
